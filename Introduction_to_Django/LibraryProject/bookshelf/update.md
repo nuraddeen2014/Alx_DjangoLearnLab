@@ -3,3 +3,5 @@
 - Output : Book.objects.filter(title='Nineteen Eighty-Four')
 <QuerySet [(Nineteen 
 Eighty-Four, George Orwell, 1949), (Nineteen Eighty-Four, George Orwell, 1949)]>
+
+- book.title is empty
