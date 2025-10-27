@@ -4,4 +4,4 @@
 <QuerySet [(Nineteen 
 Eighty-Four, George Orwell, 1949), (Nineteen Eighty-Four, George Orwell, 1949)]>
 
-- book.title is empty
+- ["book.title"] is empty
