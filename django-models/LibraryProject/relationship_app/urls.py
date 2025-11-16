@@ -2,6 +2,7 @@ from . import views
 from .views import SignUpView
 from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth import login
 
 urlpatterns = [
     path('register/', SignUpView.as_view(), name='register'),
