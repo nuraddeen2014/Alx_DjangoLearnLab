@@ -39,3 +39,4 @@ for b in books_in_library:
 
 print("\n📌 Librarian of Central Library:")
 print(library1.librarian.name)
+"Library.objects.get(name=library_name)"
