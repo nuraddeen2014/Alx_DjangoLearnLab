@@ -60,3 +60,6 @@ def member_view(request):
     context = {'profile':profile}
 
     return render(request,'member_view.html', context)
+
+
+"relationship_app/member_view.html", "relationship_app/librarian_view.html", "relationship_app/admin_view.html
