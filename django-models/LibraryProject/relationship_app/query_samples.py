@@ -41,3 +41,4 @@ print("\n📌 Librarian of Central Library:")
 print(library1.librarian.name)
 "Library.objects.get(name=library_name)"
 x = "Author.objects.get(name=author_name)", "objects.filter(author=author)"
+"Librarian.objects.get(library="
