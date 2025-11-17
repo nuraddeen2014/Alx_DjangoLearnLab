@@ -2,7 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Book, Library
 from django.views.generic.detail import DetailView
 from .forms import BookForm, RegisterForm
-from django.contrib.auth.decorators import user_passes_test, permission_required
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
