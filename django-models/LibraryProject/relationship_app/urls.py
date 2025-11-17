@@ -1,15 +1,24 @@
-from . import views
-from .views import register
 from django.urls import path
+from . import views
 from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
+    # Book CRUD
+    path('add/', views.add_book, name='add_book'),
+    path('<int:pk>/edit/', views.edit_book, name='edit_book'),
+    path('<int:pk>/delete/', views.delete_book, name='delete_book'),
+
+    # Role-based dashboards
     path('admin_view/', views.admin_view, name='admin_view'),
-    path('member_view/', views.member_view, name='member_view'),
     path('librarian_view/', views.librarian_view, name='librarian_view'),
-    path('register/', views.register.as_view(), name='register'),
-    path('logout/', LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
+    path('member_view/', views.member_view, name='member_view'),
+
+    # Registration & login/logout
+    path('register/', views.Register.as_view(), name='register'),
     path('login/', LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
+    path('logout/', LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
+
+    # Book/List Views
     path('book_list/', views.book_list, name='book_list'),
-    path('library_detail/<int:pk>', views.LibraryDetailView.as_view()),
+    path('library_detail/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
 ]
