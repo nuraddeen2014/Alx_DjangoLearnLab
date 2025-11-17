@@ -4,9 +4,9 @@ from django.contrib.auth.views import LoginView, LogoutView
 
 urlpatterns = [
     # Book CRUD
-    path('add/', views.add_book, name='add_book'),
-    path('<int:pk>/edit/', views.edit_book, name='edit_book'),
-    path('<int:pk>/delete/', views.delete_book, name='delete_book'),
+    path('add_book/', views.add_book, name='add_book'),
+    path('<int:pk>/edit_book/', views.edit_book, name='edit_book'),
+    path('<int:pk>/delete_book/', views.delete_book, name='delete_book'),
 
     # Role-based dashboards
     path('admin_view/', views.admin_view, name='admin_view'),
