@@ -44,6 +44,7 @@ class CustomUser(AbstractUser):
 # Author
 class Author(models.Model):
     name = models.CharField(max_length=100)
+    
 
     def __str__(self):
         return self.name
@@ -93,4 +94,15 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.role}"
     
+class Cars(models.Model):
+    name = models.CharField(max_length=50)
+    class Meta:
+        verbose_name = 'Car'
+        verbose_name_plural = 'Cars'
 
+        permissions = [
+            ('can_view_cars','Can view the cars' ),
+            ('can_create_cars','Can create the cars'),
+            ('can_edit_cars', 'Can edit the cars'),
+            ('can_delete_cars', 'Can delete the cars')
+        ]

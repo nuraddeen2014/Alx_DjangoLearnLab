@@ -1,0 +1,22 @@
+<!-- list_books.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List of Cars</title>
+</head>
+<body>
+    {% if perms.bookshelf.can_view_cars %}
+    <h1>Cars Available:</h1>
+    <ul>
+        {% for car in cars %}
+        <li>{{ car.name }}</li>
+        {% if perms.bookshelf.can_edit_cars %}
+        <a href="{% url 'cars_update' pk=car.pk %}">Update</a>
+        {% endif %}
+        {% endfor %}
+    </ul>
+    {% endif %}
+    
+</body>
+</html>

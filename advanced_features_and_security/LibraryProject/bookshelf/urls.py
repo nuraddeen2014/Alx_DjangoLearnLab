@@ -21,4 +21,8 @@ urlpatterns = [
     # Book/List Views
     path('book_list/', views.book_list, name='book_list'),
     path('library_detail/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
+
+    #Cars
+    path('cars/', views.CarListView.as_view(), name='cars'),
+    path('cars_update/<int:pk>/', views.CarUpdateView.as_view(), name='cars_update')
 ]

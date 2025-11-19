@@ -1,0 +1,18 @@
+<!-- list_books.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update cars</title>
+</head>
+<body>
+    {% if perms.bookshelf.can_edit_cars %}
+    <h1>Edit:</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Update</button>
+    </form>
+    {% endif %}
+</body>
+</html>

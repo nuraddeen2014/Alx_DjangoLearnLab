@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'relationship_app',
     'bookshelf',
 ]
 
@@ -124,3 +123,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
+LOGIN_REDIRECT_URL = 'book_list'
+LOGOUT_REDIRECT_URL = 'login'
