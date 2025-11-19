@@ -24,5 +24,6 @@ urlpatterns = [
 
     #Cars
     path('cars/', views.CarListView.as_view(), name='cars'),
-    path('cars_update/<int:pk>/', views.CarUpdateView.as_view(), name='cars_update')
+    path('cars_update/<int:pk>/', views.CarUpdateView.as_view(), name='cars_update'),
+    path('cars_create/', views.ExampleRegister.as_view(), name='cars_create')
 ]

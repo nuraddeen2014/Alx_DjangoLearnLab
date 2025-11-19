@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Book, Library,Cars
 from django.views.generic import DetailView,ListView,UpdateView
-from .forms import BookForm, RegisterForm
+from .forms import BookForm, RegisterForm, ExampleForm
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.views import LoginView, LogoutView
@@ -102,3 +102,9 @@ class CarUpdateView(PermissionRequiredMixin, UpdateView):
     template_name = 'bookshelf/cars_update.html'
     success_url = reverse_lazy('cars')
     permission_required = 'bookshelf.cars_update.html'
+
+class ExampleRegister(CreateView):
+    form_class = ExampleForm
+    success_url = reverse_lazy('cars')
+    template_name = 'bookshelf/form_example.html'
+
