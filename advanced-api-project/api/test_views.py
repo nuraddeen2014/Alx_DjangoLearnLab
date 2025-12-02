@@ -23,6 +23,7 @@ class BookAPITest(APITestCase):
         url = reverse("books")
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response.data
 
     def test_create_list(self):
         url = reverse("books-create")
