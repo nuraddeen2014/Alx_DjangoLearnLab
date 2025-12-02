@@ -14,11 +14,15 @@ class BookSerializer(serializers.HyperlinkedModelSerializer):
         shows full details of the book's author.
     """
 
-    author = AuthorSerializer( read_only=True)
+    author = AuthorSerializer(read_only=True)
+    author_id = serializers.PrimaryKeyRelatedField(
+    queryset=Author.objects.all(), source='author', write_only=True
+)  
 
     class Meta:
         model = Book
-        fields = ['title','publication_year','author']
+        fields = ['title','publication_year','author', 'author_id']
+
 
     def validate(self,data):
         if data['publication_year'] > datetime.now().year:
