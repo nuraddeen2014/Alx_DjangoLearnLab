@@ -5,6 +5,9 @@ class Author(models.Model):
     # This creates an author model
     name = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.name
+
 class Book(models.Model):
     """The book model maps every instance
         of a book to a specific author.
