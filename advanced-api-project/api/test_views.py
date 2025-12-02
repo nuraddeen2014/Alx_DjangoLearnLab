@@ -24,6 +24,7 @@ class BookAPITest(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         response.data
+        self.client.login
 
     def test_create_list(self):
         url = reverse("books-create")
