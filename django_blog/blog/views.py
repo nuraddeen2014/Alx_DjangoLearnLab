@@ -8,7 +8,7 @@ from django.views.generic import (
     DetailView,
     ListView,
     )
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .forms import SignUpForm, ProfileUpdateForm
 from django.contrib.auth import get_user_model
 from django.urls import reverse_lazy
@@ -91,17 +91,24 @@ class BlogPostCreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
-class BlogPostUpdateView(LoginRequiredMixin, UpdateView):
+class BlogPostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     template_name = 'blog/post_update.html'
     fields = ('title', 'content')
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author
     
     def get_success_url(self):
         post_pk = self.object.pk
         return reverse_lazy('post-detail', kwargs={'pk': post_pk})
 
-class BlogPostDelete(DeleteView):
+class BlogPostDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     template_name_suffix = '_check_delete'
     success_url = reverse_lazy('home')
     
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author

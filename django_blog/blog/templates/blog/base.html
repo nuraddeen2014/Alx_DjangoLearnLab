@@ -15,10 +15,12 @@
                 <li><a href="{% url 'home' %}">Home</a></li>
                 {% comment %} <li><a href="{% url 'posts' %}">Blog Posts</a></li> {% endcomment %}
                 {% if user.is_authenticated %}
+                <li>
                 <form method="POST" action="{% url 'logout' %}">
                     {% csrf_token %}
-                <li><button type="submit">Logout</button></li>
+                <button type="submit" class="nav-btn">Logout</button>
                 </form>
+                </li>
                 {% else %}
                 <li><a href="{% url 'login' %}">Login</a></li>
                 <li><a href="{% url 'register' %}">Register</a></li>
