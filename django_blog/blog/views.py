@@ -94,8 +94,14 @@ class BlogPostCreateView(LoginRequiredMixin, CreateView):
 class BlogPostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
     template_name = 'blog/post_update.html'
+    fields = ('title', 'content')
+    
+    def get_success_url(self):
+        post_pk = self.object.pk
+        return reverse_lazy('post-detail', kwargs={'pk': post_pk})
 
 class BlogPostDelete(DeleteView):
     model = Post
-    template_name = 'blog/post_delete.html'
+    template_name_suffix = '_check_delete'
+    success_url = reverse_lazy('home')
     
