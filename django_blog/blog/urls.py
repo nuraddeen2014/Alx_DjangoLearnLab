@@ -1,14 +1,34 @@
 from django.urls import path
 from django.views import generic
-from .views import SignUpView, CustomLoginView, ProfileDetailView, ProfileUpdateView
+from .views import (
+    SignUpView, 
+    CustomLoginView, 
+    profile_update, 
+    ProfileDetailView,
+    BlogPostCreateView,
+    BlogPostListView,
+    BlogPostDetailView,
+    BlogPostUpdateView,
+    BlogPostDelete,
+    )
 from django.contrib.auth.views import LogoutView
 
 
 urlpatterns = [
-    path('', generic.TemplateView.as_view(template_name='blog/home.html'), name='home'),
+    path('', BlogPostListView.as_view(), name='home'),
+
+    #Auth and register
     path('register/', SignUpView.as_view(), name='register'),
     path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
+
+    #profile management
     path('accounts/profile/', ProfileDetailView.as_view(), name='profile'),
-    path('accounts/profile/edit', ProfileUpdateView.as_view(), name='profile-edit'),
+    path('accounts/profile/edit', profile_update, name='profile-edit'),
+
+    #Post CRUD
+    path('post/create', BlogPostCreateView.as_view(), name='create-post'),
+    path('post/<int:pk>/', BlogPostDetailView.as_view(), name='post-detail'),
+    path('post/edit/<int:pk>/', BlogPostUpdateView.as_view(), name='update-post'),
+    path('post/delete/<int:pk>/', BlogPostDelete.as_view(), name='delete-post'),
 ]

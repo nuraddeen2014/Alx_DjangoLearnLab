@@ -3,5 +3,13 @@
 
 
 {% block content %}
-    Hello world
+    {% for post in posts %}
+    
+        {% with item_id=post.pk  %}
+            
+            <ul>
+                <li><a href="{% url 'post-detail' pk=item_id %}">{{ post }}</a></li>
+            </ul>
+        {% endwith %}
+    {% endfor %}
 {% endblock content %}

@@ -1,12 +1,22 @@
 from django.shortcuts import render
-from django.views.generic.edit import CreateView, UpdateView
-from django.views.generic import DetailView
+from django.views.generic.edit import (
+    CreateView, 
+    UpdateView, 
+    DeleteView
+    )
+from django.views.generic import (
+    DetailView,
+    ListView,
+    )
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import SignUpForm, ProfileUpdateForm
 from django.contrib.auth import get_user_model
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
-from .models import UserProfile
+from .models import UserProfile, Post
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .forms import UserUpdateForm, ProfileUpdateForm, PostCreationForm
 
 
 User = get_user_model()
@@ -28,10 +38,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
     
     def get_object(self):
         return UserProfile.objects.get(user=self.request.user)
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from .forms import UserUpdateForm, ProfileUpdateForm
-from .models import UserProfile
+
 
 @login_required
 def profile_update(request):
@@ -62,3 +69,33 @@ def profile_update(request):
         'profile_form': profile_form
     })
 
+#CRUD Operations for Post
+class BlogPostListView(ListView):
+    template_name = 'blog/home.html'
+    model = Post
+    context_object_name = 'posts'
+
+class BlogPostDetailView(DetailView):
+    template_name = 'blog/post_detail.html'
+    model = Post
+    context_object_name = 'post'
+
+
+class BlogPostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    template_name = 'blog/post_create.html'
+    form_class = PostCreationForm
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+class BlogPostUpdateView(LoginRequiredMixin, UpdateView):
+    model = Post
+    template_name = 'blog/post_update.html'
+
+class BlogPostDelete(DeleteView):
+    model = Post
+    template_name = 'blog/post_delete.html'
+    
