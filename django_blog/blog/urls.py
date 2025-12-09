@@ -27,8 +27,8 @@ urlpatterns = [
     path('accounts/profile/edit', profile_update, name='profile-edit'),
 
     #Post CRUD
-    path('post/create/', BlogPostCreateView.as_view(), name='create-post'),
+    path('post/new/', BlogPostCreateView.as_view(), name='create-post'),
     path('post/<int:pk>/', BlogPostDetailView.as_view(), name='post-detail'),
-    path('post/<int:pk>/edit/', BlogPostUpdateView.as_view(), name='update-post'),
+    path('post/<int:pk>/update/', BlogPostUpdateView.as_view(), name='update-post'),
     path('post/<int:pk>/delete/', BlogPostDelete.as_view(), name='delete-post'),
 ]

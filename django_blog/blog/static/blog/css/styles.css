@@ -1,16 +1,18 @@
-/* Basic reset */
+/* ===== Basic reset ===== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* ===== Body ===== */
 body {
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
     color: #333;
 }
 
+/* ===== Header / Navbar ===== */
 header {
     background-color: #333;
     padding: 10px;
@@ -26,16 +28,49 @@ header nav ul li {
     margin: 0 15px;
 }
 
+/* Links in navbar */
 header nav ul li a {
     color: white;
     text-decoration: none;
     font-size: 18px;
 }
 
+header nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* ===== FIX FOR LOGOUT FORM ===== */
+
+/* Make form behave like inline element */
+header nav ul li form {
+    display: inline;
+    margin: 0;
+}
+
+/* Style logout button same as links */
+.nav-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+
+    font-size: 18px;
+    color: white;
+    font-family: inherit;
+
+    cursor: pointer;
+}
+
+.nav-btn:hover {
+    text-decoration: underline;
+}
+
+/* ===== Page Content ===== */
 .content {
     margin: 20px;
 }
 
+/* ===== Footer ===== */
 footer {
     text-align: center;
     margin-top: 50px;
