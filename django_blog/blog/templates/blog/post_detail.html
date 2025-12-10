@@ -12,6 +12,7 @@
     {% if user.is_authenticated %}
         <a href="{% url 'delete-post' pk=post.pk %}">Delete this post</a>
         <a href="{% url 'update-post' pk=post.pk %}">Edit this post</a>
+        <a href="{% url 'comment' pk=post.pk %}">Comments</a>
     {% endif %}
 
 {% endblock content %}

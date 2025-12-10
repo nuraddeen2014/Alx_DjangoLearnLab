@@ -13,10 +13,10 @@ from .forms import SignUpForm, ProfileUpdateForm
 from django.contrib.auth import get_user_model
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
-from .models import UserProfile, Post
+from .models import UserProfile, Post, Comment
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from .forms import UserUpdateForm, ProfileUpdateForm, PostCreationForm
+from .forms import UserUpdateForm, ProfileUpdateForm, PostCreationForm, CommentForm
 
 
 User = get_user_model()
@@ -112,3 +112,33 @@ class BlogPostDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
+
+class PostCommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    template_name = 'blog/create_comment.html'
+    form_class = CommentForm
+
+    def form_valid(self, form):
+        post = Post.objects.get(pk=self.kwargs['pk'])
+        form.instance.post = post
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse_lazy('comment', kwargs={'pk': self.kwargs['pk']})
+
+        
+
+class PostCommentView(ListView):
+    model = Comment
+    template_name = 'blog/comment.html'
+    context_object_name = 'comments'
+
+    def get_queryset(self):
+        self.post = Post.objects.get(pk=self.kwargs['pk'])
+        return Comment.objects.filter(post=self.post).order_by('-created_at')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['post'] = self.post
+        return context

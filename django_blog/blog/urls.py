@@ -1,17 +1,24 @@
 from django.urls import path
 from django.views import generic
+from django.contrib.auth.views import LogoutView
 from .views import (
+
+    #Auth and profile management
     SignUpView, 
     CustomLoginView, 
     profile_update, 
     ProfileDetailView,
+    #BlogPost Crud operations
     BlogPostCreateView,
     BlogPostListView,
     BlogPostDetailView,
     BlogPostUpdateView,
     BlogPostDelete,
+    #Post Comments CRUD
+    PostCommentView,
+    PostCommentCreateView,
+
     )
-from django.contrib.auth.views import LogoutView
 
 
 urlpatterns = [
@@ -31,4 +38,8 @@ urlpatterns = [
     path('post/<int:pk>/', BlogPostDetailView.as_view(), name='post-detail'),
     path('post/<int:pk>/update/', BlogPostUpdateView.as_view(), name='update-post'),
     path('post/<int:pk>/delete/', BlogPostDelete.as_view(), name='delete-post'),
+
+    #comment CRUD
+    path('post/<int:pk>/comment/', PostCommentView.as_view(), name='comment'),
+    path('post/<int:pk>/comment/create/', PostCommentCreateView.as_view(), name='create-comment')
 ]
