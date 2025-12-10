@@ -106,7 +106,7 @@ class BlogPostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 class BlogPostDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
-    template_name_suffix = '_check_delete'
+    template_name_suffix = '_confirm_delete'
     success_url = reverse_lazy('home')
     
     def test_func(self):
