@@ -6,18 +6,24 @@
 <h2>Comments</h2>
 
 {% if comments %}
-    {% for comment in comments %}
-        <p>
-            <strong>{{ comment.author }}</strong><br>
-            {{ comment.content }}<br>
-            <small>{{ comment.created_at }}</small>
-        </p>
-        <hr>
-    {% endfor %}
+{% for comment in comments %}
+<p>
+    <strong>{{ comment.author }}</strong><br>
+    {{ comment.content }}<br>
+    <small>{{ comment.created_at }}</small>
+</p>
+                {% if user.is_authenticated and user == comment.author %}
+                    <p>
+                        <a class="btn" href="{% url 'comment-update' pk=comment.pk %}">Edit</a>
+                        <a class="btn" href="{% url 'comment-delete' pk=comment.pk %}">Delete</a>
+                    </p>
+                {% endif %}
+<hr>
+{% endfor %}
 {% else %}
-    <p>No comments yet</p>
+<p>No comments yet</p>
 {% endif %}
 
-<a href="{% url 'create-comment' post.pk %}">Add comment</a>
+    <a href="{% url 'create-comment' post.pk %}">Add comment</a>
 
 {% endblock content %}

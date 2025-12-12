@@ -2,9 +2,10 @@
 {% load static %}
 
 {% block content %}
+    <h2>{% if form.instance.pk %}Edit Comment{% else %}Add Comment{% endif %}</h2>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="Submit">Comment</button>
+        <button type="Submit" class="form-btn">{% if form.instance.pk %}Update{% else %}Comment{% endif %}</button>
     </form>
 {% endblock content %}

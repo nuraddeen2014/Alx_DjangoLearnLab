@@ -3,13 +3,36 @@
 
 
 {% block content %}
-    {% for post in posts %}
-    
-        {% with item_id=post.pk  %}
-            
+<div class="layout">
+    <main>
+        <ul class="post-list">
+            {% for post in posts %}
+            <li class="post-card">
+                <h3><a href="{% url 'post-detail' pk=post.pk %}">{{ post.title }}</a></h3>
+                <div class="post-meta">By {{ post.author }} • {{ post.published_date|date:"M d, Y" }}</div>
+                <p class="post-excerpt">{{ post.content|truncatechars:180 }}</p>
+                <a class="btn" href="{% url 'post-detail' pk=post.pk %}">Read more</a>
+            </li>
+            {% empty %}
+            <li>No posts yet.</li>
+            {% endfor %}
+        </ul>
+    </main>
+    <aside class="sidebar">
+        <div class="widget">
+            <h4 class="widget-title">About</h4>
+            <p class="muted">Short blog description. Share thoughts and updates.</p>
+        </div>
+        <div class="widget">
+            <h4 class="widget-title">Recent posts</h4>
             <ul>
-                <li><a href="{% url 'post-detail' pk=item_id %}">{{ post }}</a></li>
+                {% for r in recent_posts %}
+                <li><a href="{% url 'post-detail' pk=r.pk %}">{{ r.title }}</a></li>
+                {% empty %}
+                <li>No recent posts</li>
+                {% endfor %}
             </ul>
-        {% endwith %}
-    {% endfor %}
+        </div>
+    </aside>
+</div>
 {% endblock content %}

@@ -15,8 +15,10 @@ from .views import (
     BlogPostUpdateView,
     BlogPostDelete,
     #Post Comments CRUD
-    PostCommentView,
-    PostCommentCreateView,
+    CommentListView,
+    CommentCreateView,
+    CommentUpdateView,
+    CommentDeleteView
 
     )
 
@@ -40,6 +42,9 @@ urlpatterns = [
     path('post/<int:pk>/delete/', BlogPostDelete.as_view(), name='delete-post'),
 
     #comment CRUD
-    path('post/<int:pk>/comment/', PostCommentView.as_view(), name='comment'),
-    path('post/<int:pk>/comment/create/', PostCommentCreateView.as_view(), name='create-comment')
+    path('post/<int:pk>/comment/', CommentListView.as_view(), name='comment'),
+    path('post/<int:pk>/comment/create/', CommentCreateView.as_view(), name='create-comment'),
+    # comment update uses comment's pk directly
+    path('comment/<int:pk>/update/', CommentUpdateView.as_view(), name='comment-update'),
+    path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment-delete'),
 ]

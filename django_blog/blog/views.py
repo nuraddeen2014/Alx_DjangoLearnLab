@@ -16,6 +16,7 @@ from django.contrib.auth.views import LoginView
 from .models import UserProfile, Post, Comment
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from .forms import UserUpdateForm, ProfileUpdateForm, PostCreationForm, CommentForm
 
 
@@ -74,11 +75,25 @@ class BlogPostListView(ListView):
     template_name = 'blog/home.html'
     model = Post
     context_object_name = 'posts'
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Recent posts for sidebar
+        context['recent_posts'] = Post.objects.order_by('-published_date')[:5]
+        return context
 
 class BlogPostDetailView(DetailView):
     template_name = 'blog/post_detail.html'
     model = Post
     context_object_name = 'post'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['recent_posts'] = Post.objects.order_by('-published_date')[:5]
+        from .models import Comment
+        context['comments'] = Comment.objects.filter(post=self.object).order_by('-created_at')
+        return context
 
 
 class BlogPostCreateView(LoginRequiredMixin, CreateView):
@@ -113,7 +128,8 @@ class BlogPostDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         post = self.get_object()
         return self.request.user == post.author
 
-class PostCommentCreateView(LoginRequiredMixin, CreateView):
+#CRUD Operations for Comments
+class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
     template_name = 'blog/create_comment.html'
     form_class = CommentForm
@@ -129,7 +145,7 @@ class PostCommentCreateView(LoginRequiredMixin, CreateView):
 
         
 
-class PostCommentView(ListView):
+class CommentListView(ListView):
     model = Comment
     template_name = 'blog/comment.html'
     context_object_name = 'comments'
@@ -142,3 +158,47 @@ class PostCommentView(ListView):
         context = super().get_context_data(**kwargs)
         context['post'] = self.post
         return context
+
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    template_name = 'blog/create_comment.html'
+    form_class = CommentForm
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.author
+
+    def get_success_url(self):
+        # redirect back to the comments list for this post
+        return reverse_lazy('comment', kwargs={'pk': self.object.post.pk})
+
+    def handle_no_permission(self):
+        messages.error(self.request, "You don't have permission to edit this comment.")
+        # redirect to the post detail or comments list
+        return redirect('post-detail', pk=self.get_object().post.pk)
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Comment updated successfully.')
+        return super().form_valid(form)
+
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = 'blog/comment_confirm_delete.html'
+
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.author
+
+    def handle_no_permission(self):
+        messages.error(self.request, "You don't have permission to delete this comment.")
+        return redirect('post-detail', pk=self.get_object().post.pk)
+
+    def get_success_url(self):
+        return reverse_lazy('comment', kwargs={'pk': self.object.post.pk})
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, 'Comment deleted successfully.')
+        return super().delete(request, *args, **kwargs)
+

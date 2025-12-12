@@ -1,80 +1,312 @@
-/* ===== Basic reset ===== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ===== Import fonts ===== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Libre+Baskerville:wght@400;700&display=swap');
+
+/* ===== Variables ===== */
+:root {
+    --bg: #f6f7fb;
+    --card: #ffffff;
+    --muted: #6b7280;
+    /* gray-500 */
+    --text: #0f172a;
+    /* slate-900 */
+    --accent: #0ea5a6;
+    /* teal-ish */
+    --accent-dark: #0b7a78;
+    --shadow: 0 6px 18px rgba(13, 16, 21, 0.08);
 }
 
-/* ===== Body ===== */
+/* ===== Basic reset ===== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0
+}
+
+html,
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    color: #333;
+    height: 100%
+}
+
+/* ===== Base ===== */
+body {
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    background: linear-gradient(180deg, var(--bg), #ffffff);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.6;
+}
+
+/* Utility container used on all pages */
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px;
 }
 
 /* ===== Header / Navbar ===== */
 header {
-    background-color: #333;
-    padding: 10px;
-    text-align: center;
+    background: linear-gradient(90deg, var(--card) 0%, #f8fafc 100%);
+    border-bottom: 1px solid rgba(16, 24, 40, 0.04);
 }
 
+header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+/* Site title */
+header h1 {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--accent-dark);
+    letter-spacing: 0.2px;
+}
+
+/* Navigation */
 header nav ul {
-    list-style-type: none;
+    list-style: none;
+    display: flex;
+    gap: 18px;
+    align-items: center
 }
 
 header nav ul li {
-    display: inline;
-    margin: 0 15px;
+    display: inline-block
 }
 
-/* Links in navbar */
-header nav ul li a {
-    color: white;
+header nav ul li a,
+.nav-btn {
+    color: var(--text);
     text-decoration: none;
-    font-size: 18px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 6px
 }
 
-header nav ul li a:hover {
-    text-decoration: underline;
+header nav ul li a:hover,
+.nav-btn:hover {
+    background: rgba(14, 165, 166, 0.08);
+    color: var(--accent-dark)
 }
 
-/* ===== FIX FOR LOGOUT FORM ===== */
-
-/* Make form behave like inline element */
-header nav ul li form {
-    display: inline;
-    margin: 0;
-}
-
-/* Style logout button same as links */
 .nav-btn {
     background: none;
     border: none;
-    padding: 0;
-    margin: 0;
-
-    font-size: 18px;
-    color: white;
-    font-family: inherit;
-
     cursor: pointer;
+    font: inherit
 }
 
-.nav-btn:hover {
-    text-decoration: underline;
+/* ===== Hero / Featured ===== */
+.hero {
+    margin-top: 30px;
+    padding: 36px;
+    border-radius: 14px;
+    background: linear-gradient(120deg, #fff 0%, #fbfdff 100%);
+    box-shadow: var(--shadow);
 }
 
-/* ===== Page Content ===== */
+.hero h2 {
+    font-family: 'Libre Baskerville';
+    font-size: 28px;
+    color: var(--text);
+    margin-bottom: 8px
+}
+
+.hero p {
+    color: var(--muted)
+}
+
+/* ===== Content layout: main + optional sidebar ===== */
 .content {
-    margin: 20px;
+    margin-top: 20px;
 }
 
-/* ===== Footer ===== */
-footer {
-    text-align: center;
-    margin-top: 50px;
-    padding: 10px;
-    background-color: #333;
+.layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 28px;
+    align-items: start;
+}
+
+/* Make layout single column on small screens */
+@media (max-width:880px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== Post list (home) ===== */
+.post-list {
+    list-style: none;
+    display: grid;
+    gap: 18px
+}
+
+.post-card {
+    display: block;
+    background: var(--card);
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: var(--shadow);
+    transition: transform 200ms ease, box-shadow 200ms ease
+}
+
+.post-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(11, 122, 120, 0.12)
+}
+
+.post-card h3 {
+    font-family: 'Libre Baskerville';
+    margin-bottom: 6px;
+    color: var(--accent-dark)
+}
+
+.post-meta {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 10px
+}
+
+/* Post excerpt */
+.post-excerpt {
+    color: #334155;
+    font-size: 15px
+}
+
+/* Post detail */
+main article {
+    background: var(--card);
+    padding: 22px;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    margin-top: 12px
+}
+
+main article h2 {
+    margin-bottom: 10px;
+    font-family: 'Libre Baskerville'
+}
+
+main article p {
+    color: #374151
+}
+
+/* Buttons & links */
+.btn {
+    display: inline-block;
+    background: var(--accent);
     color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600
+}
+
+.btn:hover {
+    background: var(--accent-dark)
+}
+
+/* Links inside content get accent color but remain inline */
+.content a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600
+}
+
+.content a:hover {
+    text-decoration: underline
+}
+
+/* Forms */
+form input[type=text],
+form input[type=email],
+form textarea,
+form input[type=password] {
+    width: 100%;
+    padding: 10px 12px;
+    margin: 8px 0 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(10, 10, 10, 0.08)
+}
+
+form input[type=submit],
+.form-btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    cursor: pointer
+}
+
+/* Sidebar */
+.sidebar {
+    background: #fff;
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: var(--shadow)
+}
+
+.sidebar .widget-title {
+    font-weight: 700;
+    margin-bottom: 8px
+}
+
+.sidebar ul {
+    list-style: none
+}
+
+.sidebar li {
+    margin-bottom: 10px
+}
+
+/* Footer */
+footer {
+    margin-top: 40px;
+    padding: 30px 0;
+    background: #fff;
+    border-top: 1px solid rgba(16, 24, 40, 0.04);
+    color: var(--muted)
+}
+
+footer p {
+    text-align: center
+}
+
+/* Small screens */
+@media (max-width:540px) {
+    header .container {
+        padding: 12px
+    }
+
+    .container {
+        padding: 16px
+    }
+
+    header h1 {
+        font-size: 18px
+    }
+
+    .hero {
+        padding: 20px
+    }
+}
+
+/* Small typography utilities */
+.muted {
+    color: var(--muted)
+}
+
+.center {
+    text-align: center
+}
+
+/* ===== Ensure logout button matches nav links on small screens ===== */
+header nav ul li form {
+    display: inline
 }
