@@ -41,9 +41,9 @@ urlpatterns = [
     path('post/<int:pk>/update/', BlogPostUpdateView.as_view(), name='update-post'),
     path('post/<int:pk>/delete/', BlogPostDelete.as_view(), name='delete-post'),
 
-    #comment CRUD
+    #comment CRUD post/<int:pk>/comments/new/
     path('post/<int:pk>/comment/', CommentListView.as_view(), name='comment'),
-    path('post/<int:pk>/comment/create/', CommentCreateView.as_view(), name='create-comment'),
+    path('post/<int:pk>/comments/new/', CommentCreateView.as_view(), name='create-comment'),
     # comment update uses comment's pk directly
     path('comment/<int:pk>/update/', CommentUpdateView.as_view(), name='comment-update'),
     path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment-delete'),
