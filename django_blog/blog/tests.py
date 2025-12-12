@@ -47,4 +47,33 @@ class CommentPermissionsTests(TestCase):
 		self.assertTrue(Comment.objects.filter(pk=self.comment.pk).exists())
 
 
+class TaggingAndSearchTests(TestCase):
+	def setUp(self):
+		User = get_user_model()
+		self.user = User.objects.create_user(username='author', password='pass')
+		self.p1 = Post.objects.create(title='Hello World', content='A post about testing', author=self.user)
+		self.p2 = Post.objects.create(title='Tagged Post', content='This one has specialtag', author=self.user)
+		# attach tag to p2
+		from .models import Tag
+		t = Tag.objects.create(name='specialtag')
+		self.p2.tags.add(t)
+
+	def test_tag_create_and_association(self):
+		from .models import Tag
+		self.assertTrue(Tag.objects.filter(name='specialtag').exists())
+		self.assertIn('specialtag', [t.name for t in self.p2.tags.all()])
+
+	def test_search_by_title_and_content(self):
+		url = reverse('search') + '?q=Hello'
+		response = self.client.get(url)
+		self.assertEqual(response.status_code, 200)
+		self.assertContains(response, 'Hello World')
+
+	def test_search_by_tag(self):
+		url = reverse('search') + '?q=specialtag'
+		response = self.client.get(url)
+		self.assertEqual(response.status_code, 200)
+		self.assertContains(response, 'Tagged Post')
+
+
 # Create your tests here.

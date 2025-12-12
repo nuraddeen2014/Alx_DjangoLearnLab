@@ -26,9 +26,18 @@ class ProfileUpdateForm(forms.ModelForm):
         fields = ('bio', 'profile_photo')
 
 class PostCreationForm(forms.ModelForm):
+    tags = forms.CharField(required=False, help_text='Comma-separated tags', widget=forms.TextInput(attrs={'placeholder': 'tag1, tag2'}))
+
     class Meta:
         model = Post
-        fields = ('title', 'content', ) 
+        fields = ('title', 'content', )
+
+    def __init__(self, *args, **kwargs):
+        # allow initializing tags string when editing
+        instance = kwargs.get('instance')
+        super().__init__(*args, **kwargs)
+        if instance and instance.pk:
+            self.fields['tags'].initial = ', '.join([t.name for t in instance.tags.all()])
 
 class CommentForm(forms.ModelForm):
     class Meta:

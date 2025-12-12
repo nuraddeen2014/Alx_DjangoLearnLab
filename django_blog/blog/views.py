@@ -13,7 +13,9 @@ from .forms import SignUpForm, ProfileUpdateForm
 from django.contrib.auth import get_user_model
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
-from .models import UserProfile, Post, Comment
+from .models import UserProfile, Post, Comment, Tag
+from django.shortcuts import get_object_or_404
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -104,12 +106,20 @@ class BlogPostCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        # handle tags
+        tags_str = form.cleaned_data.get('tags', '')
+        tag_names = [t.strip() for t in tags_str.split(',') if t.strip()]
+        if tag_names:
+            for name in tag_names:
+                tag_obj, _ = Tag.objects.get_or_create(name=name)
+                self.object.tags.add(tag_obj)
+        return response
 
 class BlogPostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
     template_name = 'blog/post_update.html'
-    fields = ('title', 'content')
+    form_class = PostCreationForm
 
     def test_func(self):
         post = self.get_object()
@@ -119,6 +129,17 @@ class BlogPostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         post_pk = self.object.pk
         return reverse_lazy('post-detail', kwargs={'pk': post_pk})
 
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        tags_str = form.cleaned_data.get('tags', '')
+        tag_names = [t.strip() for t in tags_str.split(',') if t.strip()]
+        # set tags (clear current, add new)
+        self.object.tags.clear()
+        for name in tag_names:
+            tag_obj, _ = Tag.objects.get_or_create(name=name)
+            self.object.tags.add(tag_obj)
+        return response
+
 class BlogPostDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Post
     template_name_suffix = '_confirm_delete'
@@ -127,6 +148,43 @@ class BlogPostDelete(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
+
+
+class TagPostListView(ListView):
+    model = Post
+    template_name = 'blog/home.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        self.tag = get_object_or_404(Tag, slug=self.kwargs['slug'])
+        return self.tag.posts.order_by('-published_date')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag'] = self.tag
+        context['recent_posts'] = Post.objects.order_by('-published_date')[:5]
+        return context
+
+
+class SearchResultsView(ListView):
+    model = Post
+    template_name = 'blog/search_results.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q', '')
+        if not query:
+            return Post.objects.none()
+        qs = Post.objects.filter(
+            Q(title__icontains=query) | Q(content__icontains=query) | Q(tags__name__icontains=query)
+        ).distinct().order_by('-published_date')
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('q', '')
+        context['recent_posts'] = Post.objects.order_by('-published_date')[:5]
+        return context
 
 #CRUD Operations for Comments
 class CommentCreateView(LoginRequiredMixin, CreateView):

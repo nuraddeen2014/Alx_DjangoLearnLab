@@ -6,7 +6,14 @@
     <main>
         <article>
             <h2>{{ post.title }}</h2>
-            <div class="post-meta">By {{ post.author }} • {{ post.published_date|date:"M d, Y" }}</div>
+                <div class="post-meta">By {{ post.author }} • {{ post.published_date|date:"M d, Y" }}</div>
+                {% if post.tags.all %}
+                    <div class="post-meta">Tags:
+                        {% for t in post.tags.all %}
+                            <span class="tag"><a href="{% url 'posts-by-tag' slug=t.slug %}">#{{ t.name }}</a></span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             <div class="post-body">{{ post.content|linebreaks }}</div>
         </article>
 

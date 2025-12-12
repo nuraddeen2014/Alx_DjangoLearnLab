@@ -5,10 +5,21 @@
 {% block content %}
 <div class="layout">
     <main>
+        {% if tag %}
+        <h2>Posts tagged with: #{{ tag.name }}</h2>
+        {% endif %}
         <ul class="post-list">
             {% for post in posts %}
             <li class="post-card">
                 <h3><a href="{% url 'post-detail' pk=post.pk %}">{{ post.title }}</a></h3>
+                {% if post.tags.all %}
+                <div class="post-meta">
+                    Tags:
+                    {% for t in post.tags.all %}
+                    <span class="tag"><a href="{% url 'posts-by-tag' slug=t.slug %}">#{{ t.name }}</a></span>
+                    {% endfor %}
+                </div>
+                {% endif %}
                 <div class="post-meta">By {{ post.author }} • {{ post.published_date|date:"M d, Y" }}</div>
                 <p class="post-excerpt">{{ post.content|truncatechars:180 }}</p>
                 <a class="btn" href="{% url 'post-detail' pk=post.pk %}">Read more</a>

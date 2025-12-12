@@ -211,6 +211,22 @@ main article p {
     background: var(--accent-dark)
 }
 
+/* Tag chips */
+.tag {
+    display: inline-block;
+    background: rgba(14, 165, 166, 0.08);
+    color: var(--accent-dark);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 13px;
+    margin-right: 6px
+}
+
+.tag a {
+    color: var(--accent-dark);
+    text-decoration: none
+}
+
 /* Links inside content get accent color but remain inline */
 .content a {
     color: var(--accent);

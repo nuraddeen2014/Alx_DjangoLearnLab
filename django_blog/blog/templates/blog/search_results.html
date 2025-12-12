@@ -1,0 +1,32 @@
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="layout">
+    <main>
+        <h2>Search results for: "{{ query }}"</h2>
+        <ul class="post-list">
+            {% for post in posts %}
+            <li class="post-card">
+                <h3><a href="{% url 'post-detail' pk=post.pk %}">{{ post.title }}</a></h3>
+                <div class="post-meta">By {{ post.author }} • {{ post.published_date|date:"M d, Y" }}</div>
+                <p class="post-excerpt">{{ post.content|truncatechars:180 }}</p>
+                <a class="btn" href="{% url 'post-detail' pk=post.pk %}">Read more</a>
+            </li>
+            {% empty %}
+            <li>No posts found for your query</li>
+            {% endfor %}
+        </ul>
+    </main>
+    <aside class="sidebar">
+        <div class="widget">
+            <h4 class="widget-title">Recent posts</h4>
+            <ul>
+                {% for r in recent_posts %}
+                <li><a href="{% url 'post-detail' pk=r.pk %}">{{ r.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </aside>
+</div>
+{% endblock content %}
