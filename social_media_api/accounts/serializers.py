@@ -27,3 +27,4 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         return user
     #Token.objects.create() implemented in views
+
