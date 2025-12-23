@@ -95,7 +95,7 @@ def follow(request, pk=None):
     request.user.followers.add(target_user)
     return Response({'message': f'You are now following {target_user.username}'}, status=status.HTTP_200_OK)
 
-@api_view(['POST'])
+@api_view(['DELETE']) # Best practice: use DELETE for unfollowing
 @authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def unfollow(request, pk=None):
