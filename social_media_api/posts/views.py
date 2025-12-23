@@ -51,4 +51,4 @@ class FeedViewSet(viewsets.ReadOnlyModelViewSet):
         # select_related('author') avoids N+1 queries for the author's details
         return Post.objects.filter(
             author__in=user.following.all()
-        ).select_related('author')
+        ).select_related('author').order_by('-created_at')
