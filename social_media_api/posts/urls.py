@@ -9,5 +9,5 @@ router.register(r'comments', CommentAPIView)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('feeds/', FeedViewSet.as_view({'get':'list'})),
+    path('feed/', FeedViewSet.as_view({'get':'list'})),
 ]
