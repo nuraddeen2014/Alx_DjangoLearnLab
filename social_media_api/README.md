@@ -113,6 +113,52 @@ curl -X POST http://localhost:8000/api/comments/ \
 
 ---
 
+## Follows & Feeds 🔁
+
+This project supports a simple follow relationship between users and a user-specific feed of posts from followed users.
+
+- **Follow model (concept):** a `Follow` relates a `follower` (the user who follows) to a `following` (the user being followed). Implementations may use `POST` to create and `DELETE` to remove follows.
+
+- **Common endpoints**
+  - `GET /api/follows/` — list follows for the authenticated user (who they follow and who follows them).
+  - `POST /api/follows/` — create a follow. Body example:
+
+```json
+{
+  "following": 3
+}
+```
+
+  - `DELETE /api/follows/{id}/` — unfollow (or use `POST` to a toggle endpoint if implemented).
+
+- **Feed endpoint**
+  - `GET /api/feed/` or `GET /api/posts/feed/` — returns recent posts made by users the authenticated user follows. Responses are paginated and include standard `Post` fields.
+
+- **Authentication & permissions**
+  - All follow and feed endpoints require authentication. Add `Authorization: Token <your_token>`.
+  - Creating/deleting a `Follow` affects only the authenticated user (you cannot create a follow on behalf of another user).
+
+- **Example cURL — follow a user**
+
+```bash
+curl -X POST http://localhost:8000/api/follows/ \
+  -H "Authorization: Token <your_token>" \
+  -H "Content-Type: application/json" \
+  -d '{"following": 3}'
+```
+
+- **Example cURL — get your feed**
+
+```bash
+curl -X GET http://localhost:8000/api/feed/ \
+  -H "Authorization: Token <your_token>"
+```
+
+Notes:
+- If your project doesn't yet include `Follow` or `Feed` endpoints, these are common patterns to implement using a `Follow` model and a `FeedView` that filters `Post.objects.filter(author__in=followed_users)`.
+- Consider adding indexes on follow relationships and pagination for the feed to keep performance acceptable for many follows.
+
+
 ## Permissions & behavior 🔒
 
 - Views use token/session authentication; add `Authorization: Token <token>` for authenticated requests.
