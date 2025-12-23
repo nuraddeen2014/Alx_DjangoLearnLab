@@ -84,9 +84,9 @@ def profile(request):
 @api_view(['POST']) # Best practice: use POST for state changes
 @authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication])
 @permission_classes([permissions.IsAuthenticated])
-def follow(request, pk=None):
+def follow(request, user_id=None):
     # Use get_object_or_404 to prevent server crashes if ID doesn't exist
-    target_user = get_object_or_404(User, id=pk)
+    target_user = get_object_or_404(User, id=user_id)
     
     if request.user == target_user:
         return Response({'error': 'You cannot follow yourself'}, status=status.HTTP_400_BAD_REQUEST)
@@ -98,8 +98,8 @@ def follow(request, pk=None):
 @api_view(['DELETE']) # Best practice: use DELETE for unfollowing
 @authentication_classes([authentication.TokenAuthentication, authentication.SessionAuthentication])
 @permission_classes([permissions.IsAuthenticated])
-def unfollow(request, pk=None):
-    target_user = get_object_or_404(User, id=pk)
+def unfollow(request, user_id=None):
+    target_user = get_object_or_404(User, id=user_id)
     
     # Logic: "Remove this target user from the list of people I am following"
     request.user.followers.remove(target_user)

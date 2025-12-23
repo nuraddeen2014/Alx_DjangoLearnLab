@@ -19,7 +19,7 @@ urlpatterns = [
     # Posted by Ignacio Villela, modified by community. See post 'Timeline' for change history
     # Retrieved 2025-12-23, License - CC BY-SA 4.0
 
-    path('follow/<int:pk>/', follow, name='follow'),
-    path('unfollow/<int:pk>/', unfollow, name='unfollow'),
+    path('follow/<int:user_id>/', follow, name='follow'),
+    path('unfollow/<int:user_id>/', unfollow, name='unfollow'),
 
 ]
