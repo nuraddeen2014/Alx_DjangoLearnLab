@@ -54,4 +54,4 @@ class FeedViewSet(viewsets.ReadOnlyModelViewSet):
         ).select_related('author').order_by('-created_at')
     
     "Post.objects.filter(author__in=following_users).order_by"
-    #permissions.isAuthenticated ensures only logged-in users can access the feed"
+    #permissions.IsAuthenticated ensures only logged-in users can access the feed"
