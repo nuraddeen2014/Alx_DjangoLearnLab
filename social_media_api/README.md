@@ -113,6 +113,69 @@ curl -X POST http://localhost:8000/api/comments/ \
 
 ---
 
+
+## Follows & Feeds 🔁
+
+The app exposes simple follow/unfollow endpoints (in `accounts.urls`) and a feed endpoint (in `posts.urls`). All endpoints are included under the project prefix `/api/` (see [social_media_api/urls.py](social_media_api/urls.py)).
+
+- **Follow / Unfollow (actual routes)**
+  - `POST /api/follow/<pk>/` — follow the user whose id is `<pk>`.
+  - `DELETE /api/unfollow/<pk>/` — unfollow the user whose id is `<pk>`.
+
+  - These routes are defined in [accounts/urls.py](accounts/urls.py#L1-L40) and implemented as function-based views in [accounts/views.py](accounts/views.py#L1-L200): `follow(request, pk)` and `unfollow(request, pk)`.
+
+  - Authentication: both endpoints require authentication. Add header `Authorization: Token <your_token>`.
+
+  - Example cURL — follow a user:
+
+```bash
+curl -X POST http://localhost:8000/api/follow/3/ \
+  -H "Authorization: Token <your_token>"
+```
+
+  - Example cURL — unfollow a user:
+
+```bash
+curl -X DELETE http://localhost:8000/api/unfollow/3/ \
+  -H "Authorization: Token <your_token>"
+```
+
+- **Feed endpoint (actual route)**
+  - `GET /api/feeds/` — returns recent posts authored by users the authenticated user follows.
+  - This route is defined in [posts/urls.py](posts/urls.py#L1-L50) and implemented by `FeedViewSet` in [posts/views.py](posts/views.py#L1-L200) which uses the authenticated user to filter posts.
+
+  - Example cURL — get your feed:
+
+```bash
+curl -X GET http://localhost:8000/api/feeds/ \
+  -H "Authorization: Token <your_token>"
+```
+
+- **Notes about the current implementation (important)**
+  - `FeedViewSet.get_queryset()` filters posts using `user.following.all()` (i.e. authors the current user is following).
+  - However, the `follow` and `unfollow` views in `accounts/views.py` currently call `request.user.followers.add(target_user)` and `request.user.followers.remove(target_user)`. That operation adds/removes the *target user* to the *authenticated user’s followers* set — which actually makes the target user follow the requester, not the other way around.
+
+  - Recommended fix: change `follow`/`unfollow` to modify the `following` relationship of the requester, for example:
+
+```python
+# in accounts/views.py
+request.user.following.add(target_user)    # follow
+request.user.following.remove(target_user) # unfollow
+```
+
+  - Alternatively, perform the inverse operation on the target user to be explicit:
+
+```python
+# make the target user record that they have a new follower
+target_user.followers.add(request.user)
+# remove follower
+target_user.followers.remove(request.user)
+```
+
+  - Without the fix, the feed may appear empty because `FeedViewSet` looks at `user.following`, which is not updated by the current `follow` implementation.
+
+  - See the implementations here: [accounts/views.py#L1-L200](accounts/views.py#L1-L200) and [posts/views.py#L1-L200](posts/views.py#L1-L200).
+
 ## Permissions & behavior 🔒
 
 - Views use token/session authentication; add `Authorization: Token <token>` for authenticated requests.
